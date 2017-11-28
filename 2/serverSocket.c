@@ -38,7 +38,10 @@ doServiceFork(int fd)
 		perror ("Error creating child");
 		exit(1);
 	}
-	if (pid == 0) doService(fd);
+	if (pid == 0) {
+		doService(fd);
+		exit(0);
+  }
 
 }
 
