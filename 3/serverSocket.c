@@ -1,18 +1,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
-#define MAX_CHILDS 2
+#define MAX_CHILDS 5
 
 int num_connections = 0;
 
-write_connection(){
+void write_connection(){
 	char buffer[30];
 	sprintf(buffer,"\nnum_connections %d\n",num_connections);
 	write (1, buffer, strlen (buffer));
 }
 
-doService(int fd) {
+void doService(int fd) {
 int i = 0;
 char buff[80];
 char buff2[80];
@@ -40,7 +42,7 @@ int socket_fd = (int) fd;
 
 }
 
-doServiceFork(int fd)
+void doServiceFork(int fd)
 {
 	write_connection();
   if (num_connections < MAX_CHILDS) {
@@ -62,7 +64,7 @@ doServiceFork(int fd)
 
 }
 
-main (int argc, char *argv[])
+void main (int argc, char *argv[])
 {
   int socketFD;
   int connectionFD;

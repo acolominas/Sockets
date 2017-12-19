@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
+######AFEGIR TANCAR CANALS Y WAIT DEL PARE (ELIMINAR TASK_STRUCTS)
 
 doService(int fd) {
 int i = 0;

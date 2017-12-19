@@ -3,9 +3,10 @@
 #include <stdio.h>
 #include <sys/resource.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 
-main (int argc, char *argv[])
+void main (int argc, char *argv[])
 {
   int connectionFD;
   int ret;
@@ -54,7 +55,7 @@ main (int argc, char *argv[])
 
 	  buff[ret] = '\0';
 	  sprintf (buff2, "Client [%d] received: %s\n",getpid(), buff);
-	  write(1,buff2,strlen(buff2)); 
+	  write(1,buff2,strlen(buff2));
 
   }
 

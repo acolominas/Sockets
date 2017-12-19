@@ -18,7 +18,7 @@ void trat_sigchld (int signum) {
 		current_concurrent --;
 }
 
-main(int argc, char *argv[]) {
+void main(int argc, char *argv[]) {
 int i, nclients, pidh, fd;
 char buf[80];
 int msec_elapsed;
@@ -42,9 +42,9 @@ for (i=0; i<nclients;i++){
 
 	case -1: perror("Error creating client process");
 		 exit(1);
-	case 0:  
+	case 0:
 		 sprintf(buf, "client_%d", i);
-		 fd = open (buf, O_CREAT|O_TRUNC|O_WRONLY, 0600); 
+		 fd = open (buf, O_CREAT|O_TRUNC|O_WRONLY, 0600);
 		 if (fd < 0) {
 			perror("Opening client results file");
 		 } else {
