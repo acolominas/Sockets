@@ -3,10 +3,15 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <signal.h>
 
-#define MAX_CHILDS 5
+#define MAX_CHILDS 25
 
 int num_connections = 0;
+
+void handleChildExit(int numSignal) {
+	num_connections--;
+}
 
 void write_connection(){
 	char buffer[30];
@@ -45,23 +50,19 @@ int socket_fd = (int) fd;
 void doServiceFork(int fd)
 {
 	write_connection();
-  if (num_connections < MAX_CHILDS) {
-		int pid = fork();
-		if(pid < 0) {
-			perror ("Error creating child");
-			exit(1);
-		}
-		else if(pid == 0) {
-			doService(fd);
-			exit(0);
-		}
-		else ++num_connections;
- }
- else {
-	 while(!wait(NULL) > 0);
-	 --num_connections;
- }
-
+	if(num_connections >= MAX_CHILDS) {
+		while(waitpid(-1, NULL, 0) > WNOHANG);
+	}
+	int pid = fork();
+	if(pid < 0) {
+		perror ("Error creating child");
+		exit(1);
+	}
+	else if(pid == 0) {
+		doService(fd);
+		exit(0);
+	}
+	else ++num_connections;
 }
 
 void main (int argc, char *argv[])
@@ -88,6 +89,7 @@ void main (int argc, char *argv[])
       exit (1);
     }
 
+  signal(SIGCHLD, handleChildExit);
   while (1) {
 	  connectionFD = acceptNewConnections (socketFD);
 	  if (connectionFD < 0)

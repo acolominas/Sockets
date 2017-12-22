@@ -43,6 +43,9 @@ doServiceFork(int fd)
 		doService(fd);
 		exit(0);
   }
+	if (pid > 0) {
+		while(!wait(NULL) > 0);
+	}
 
 }
 
